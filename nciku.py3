@@ -1,4 +1,3 @@
-#!/usr/bin/env python3
 # -*- coding: utf-8 -*-
 #
 # Get shit from nciku.
@@ -35,17 +34,14 @@ def charid(c):
         return cid
 
 def strokeurl(c):
-    cid = charid(c)
-    page = urlopen(STROKEURL % cid).read()
-    swfurl = re.search(b'http:\/\/.*?\.swf', page).group(0)
-    return swfurl.decode('ascii')
+    return("http://images.nciku.com/stroke_order/{0}.swf".format(c))
 
-def downloadstrokes(c, swfpath):
-    """Given a 汉字, download its flash stroke order file."""
-    swfurl = strokeurl(c)
-    swf = urlopen(swfurl).read()
-    with open(swfpath, 'wb') as out:
-        out.write(swf)
+# def downloadstrokes(c, swfpath):
+#     """Given a 汉字, download its flash stroke order file."""
+#     swfurl = strokeurl(c)
+#     swf = urlopen(swfurl).read()
+#     with open(swfpath, 'wb') as out:
+#         out.write(swf)
 
 def main():
     """main function for standalone usage"""
@@ -60,12 +56,17 @@ def main():
 
     # do stuff
     for c in args[0]:
-        swfpath = os.path.join(CHARDIR, '%s.swf' % c)
-        # Download if we don't already have it
-        if not os.path.isfile(swfpath):
-            downloadstrokes(c, swfpath)
+        id = charid(c)
+        print("id:", id)
+        url = strokeurl(id)
+        print("url:", url)
 
-        os.system('open %s' % swfpath)
+        # swfpath = os.path.join(CHARDIR, '%s.swf' % c)
+        # # Download if we don't already have it
+        # if not os.path.isfile(swfpath):
+        #     downloadstrokes(c, swfpath)
+
+        # os.system('open %s' % swfpath)
 
 if __name__ == '__main__':
-    sys.exit(main())
+    main()
